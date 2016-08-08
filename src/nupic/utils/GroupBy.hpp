@@ -28,10 +28,16 @@
 
 #include <nupic/utils/Log.hpp>
 
-// GCC warns that `key` might be uninitialized in the `calculateNext_` methods.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunknown-pragmas"
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+// This file causes GCC "maybe-uninitialized" false positives.
+#ifdef __GNUC__
+#ifndef __clang__ // GCC
+#define GCC_UNINITIALIZED_VAR(x) x = x
+#else // clang
+#define GCC_UNINITIALIZED_VAR(x) x
+#endif
+#else // something else
+#define GCC_UNINITIALIZED_VAR(x) x
+#endif
 
 namespace nupic
 {
@@ -254,20 +260,13 @@ namespace nupic
             current1_ != end1_)
         {
           // Find the lowest key.
-          KeyType key;
+          KeyType GCC_UNINITIALIZED_VAR(key);
           bool found = false;
 
           if (current0_ != end0_)
           {
-            if (found)
-            {
-              key = std::min(key, keyFn0_(*current0_));
-            }
-            else
-            {
-              key = keyFn0_(*current0_);
-              found = true;
-            }
+            key = keyFn0_(*current0_);
+            found = true;
           }
 
           if (current1_ != end1_)
@@ -455,20 +454,13 @@ namespace nupic
             current2_ != end2_)
         {
           // Find the lowest key.
-          KeyType key;
+          KeyType GCC_UNINITIALIZED_VAR(key);
           bool found = false;
 
           if (current0_ != end0_)
           {
-            if (found)
-            {
-              key = std::min(key, keyFn0_(*current0_));
-            }
-            else
-            {
-              key = keyFn0_(*current0_);
-              found = true;
-            }
+            key = keyFn0_(*current0_);
+            found = true;
           }
 
           if (current1_ != end1_)
@@ -711,20 +703,13 @@ namespace nupic
             current3_ != end3_)
         {
           // Find the lowest key.
-          KeyType key;
+          KeyType GCC_UNINITIALIZED_VAR(key);
           bool found = false;
 
           if (current0_ != end0_)
           {
-            if (found)
-            {
-              key = std::min(key, keyFn0_(*current0_));
-            }
-            else
-            {
-              key = keyFn0_(*current0_);
-              found = true;
-            }
+            key = keyFn0_(*current0_);
+            found = true;
           }
 
           if (current1_ != end1_)
@@ -1020,20 +1005,13 @@ namespace nupic
             current4_ != end4_)
         {
           // Find the lowest key.
-          KeyType key;
+          KeyType GCC_UNINITIALIZED_VAR(key);
           bool found = false;
 
           if (current0_ != end0_)
           {
-            if (found)
-            {
-              key = std::min(key, keyFn0_(*current0_));
-            }
-            else
-            {
-              key = keyFn0_(*current0_);
-              found = true;
-            }
+            key = keyFn0_(*current0_);
+            found = true;
           }
 
           if (current1_ != end1_)
@@ -1251,7 +1229,5 @@ namespace nupic
   }
 
 } // end namespace nupic
-
-#pragma GCC diagnostic pop
 
 #endif // NTA_GROUP_BY_HPP
