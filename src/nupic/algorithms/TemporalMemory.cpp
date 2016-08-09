@@ -425,14 +425,12 @@ void TemporalMemory::compute(
                              activeColumnsUnsorted + activeColumnsSize);
   std::sort(activeColumns.begin(), activeColumns.end());
 
-  const auto identity =
-    [](UInt c) { return c;};
   const auto columnForSegment =
     [&](const SegmentOverlap& s) { return s.segment.cell / cellsPerColumn_; };
 
-  for (auto& columnData : group_by(activeColumns, identity,
-                                   activeSegments_, columnForSegment,
-                                   matchingSegments_, columnForSegment))
+  for (auto& columnData : groupBy(activeColumns, identity<UInt>,
+                                  activeSegments_, columnForSegment,
+                                  matchingSegments_, columnForSegment))
   {
     UInt column;
     vector<UInt>::const_iterator
